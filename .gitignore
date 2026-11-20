@@ -1,0 +1,48 @@
+# Datasets and model weights
+datasets/raw/
+weights/
+checkpoints/
+*.pt
+*.pth
+*.pkl
+*.ckpt
+
+# 3D reconstruction outputs
+outputs/
+depths/
+*.ply
+*.splat
+*.spz
+*.sog
+*.bin
+
+# Environments and packages
+envs/
+conda_pkgs/
+wheelhouse/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+
+# Archives and videos
+*.tar
+*.tar.gz
+*.zip
+*.mp4
+*.mov
+
+# Logs and temporary files
+*.log
+*.tmp
+nohup.out
+
+# Editor and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+third_party/repos/

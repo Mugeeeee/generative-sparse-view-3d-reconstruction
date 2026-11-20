@@ -1,0 +1,46 @@
+--- a/src/model.py
++++ b/src/model.py
+@@ -1,3 +1,4 @@
++import os
+ import sys
+ import time
+ import numpy as np
+@@ -10,10 +11,11 @@
+ p = "src/"
+ sys.path.append(p)
+ from einops import rearrange, repeat
++SD_TURBO_PATH = os.environ.get("SD_TURBO_PATH", "stabilityai/sd-turbo")
+ 
+ 
+ def make_1step_sched():
+-    noise_scheduler_1step = DDPMScheduler.from_pretrained("stabilityai/sd-turbo", subfolder="scheduler")
++    noise_scheduler_1step = DDPMScheduler.from_pretrained(SD_TURBO_PATH, subfolder="scheduler")
+     noise_scheduler_1step.set_timesteps(1, device="cuda")
+     noise_scheduler_1step.alphas_cumprod = noise_scheduler_1step.alphas_cumprod.cuda()
+     return noise_scheduler_1step
+@@ -78,13 +80,13 @@
+         print("Initializing GeoQuery")
+         print("="*70)
+ 
+-        self.tokenizer = AutoTokenizer.from_pretrained("stabilityai/sd-turbo", subfolder="tokenizer")
+-        self.text_encoder = CLIPTextModel.from_pretrained("stabilityai/sd-turbo", subfolder="text_encoder").cuda()
++        self.tokenizer = AutoTokenizer.from_pretrained(SD_TURBO_PATH, subfolder="tokenizer")
++        self.text_encoder = CLIPTextModel.from_pretrained(SD_TURBO_PATH, subfolder="text_encoder").cuda()
+         self.sched = make_1step_sched()
+         self.neighborhood_size = neighborhood_size
+         self.low_res_only = low_res_only
+ 
+-        vae = AutoencoderKL.from_pretrained("stabilityai/sd-turbo", subfolder="vae")
++        vae = AutoencoderKL.from_pretrained(SD_TURBO_PATH, subfolder="vae")
+         vae.encoder.forward = my_vae_encoder_fwd.__get__(vae.encoder, vae.encoder.__class__)
+         vae.decoder.forward = my_vae_decoder_fwd.__get__(vae.decoder, vae.decoder.__class__)
+ 
+@@ -97,7 +99,7 @@
+ 
+         from geoquery_unet import UNet2DConditionModel, init_geoquery_modules, set_geometry_context, clear_geometry_context
+         print("Initializing multi-view UNet with GeoQuery attention...")
+-        unet = UNet2DConditionModel.from_pretrained("stabilityai/sd-turbo", subfolder="unet")
++        unet = UNet2DConditionModel.from_pretrained(SD_TURBO_PATH, subfolder="unet")
+ 
+ 
+         self.set_geometry_context = set_geometry_context
